@@ -1,1 +1,135 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Padhlo67 | Upload Science Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f6f8fa;
+      color: #222;
+    }
+    h1 {
+      color: #0066cc;
+    }
+    textarea {
+      width: 100%;
+      height: 300px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #log {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Science Question Uploader</h1>
+  <p>Paste your <b>questions JSON</b> below and click “Upload to Firestore”.</p>
+  <label for="subjectSelect"><b>Select Subject:</b></label>
+<select id="subjectSelect">
+  <option value="">-- Choose Subject --</option>
+  <option value="Science">Science</option>
+  <option value="Computer">Computer</option>
+  <option value="Mathematics">Mathematics</option>
+  <option value="History">History</option>
+</select>
+
+  <textarea id="jsonInput" placeholder='password'></textarea>
+  <br>
+  <button id="uploadBtn">Upload to Firestore</button>
+
+  <div id="log"></div>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCFX4R2OYeDlGYr1ApA24IhIJAg8G7COIk",
+    authDomain: "earnings-calculator-3f7d4.firebaseapp.com",
+    projectId: "earnings-calculator-3f7d4",
+    storageBucket: "earnings-calculator-3f7d4.firebasestorage.app",
+    messagingSenderId: "234683714234",
+    appId: "1:234683714234:web:9259e1b5fbe9bcbfb19083",
+    measurementId: "G-QS4X1MNVKB"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  const logDiv = document.getElementById("log");
+  const uploadBtn = document.getElementById("uploadBtn");
+
+  function log(msg) {
+    logDiv.textContent += msg + "\n";
+    logDiv.scrollTop = logDiv.scrollHeight;
+  }
+
+  async function upload() {
+    const input = document.getElementById("jsonInput").value.trim();
+    const subject = document.getElementById("subjectSelect").value.trim();
+
+    if (!input) return alert("Please paste your questions JSON first.");
+    if (!subject) return alert("Please select a subject.");
+
+    let questions;
+    try {
+      questions = JSON.parse(input);
+    } catch (e) {
+      return alert("Invalid JSON format. Please check your text.");
+    }
+
+    uploadBtn.disabled = true;
+    log(`Signing in anonymously...`);
+    await signInAnonymously(auth);
+
+    log(`Uploading ${questions.length} questions to '${subject}'...`);
+
+    let count = 0;
+    for (const q of questions) {
+      try {
+        await addDoc(collection(db, "questions", subject, "items"), q);
+        count++;
+        log(`✅ Uploaded: ${q.question.substring(0, 80)}...`);
+      } catch (err) {
+        log(`❌ Error: ${err.message}`);
+      }
+    }
+
+    log(`\n🎉 Done! Successfully uploaded ${count} questions to ${subject}.`);
+    uploadBtn.disabled = false;
+  }
+
+  uploadBtn.addEventListener("click", upload);
+</script>
+
+
+</body>
+</html>
