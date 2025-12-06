@@ -24,6 +24,7 @@ const leaderboardSection = document.getElementById("leaderboard-section");
 const leaderboardList = document.getElementById("leaderboard-list");
 const playerNameDisplay = document.getElementById("player-name-display");
 const playerEloDisplay = document.getElementById("player-elo-display");
+const infoFooter = document.getElementById("info-footer");
 
 const summaryBox = document.createElement("div");
 summaryBox.id = "summary-box";
@@ -205,6 +206,7 @@ return arr;
 async function startGame(subject) {
 subjectSelection.classList.add("hidden");
 leaderboardSection.classList.add("hidden");
+infoFooter.classList.add("hidden"); // Hide info section
 quizArea.classList.remove("hidden");
 resultArea.classList.add("hidden");
 score = 0;
@@ -221,6 +223,7 @@ if (qSnap.empty) {
   quizArea.classList.add("hidden");
   subjectSelection.classList.remove("hidden");
   leaderboardSection.classList.remove("hidden");
+  infoFooter.classList.remove("hidden"); // Show info section again
   return;
 }
 
@@ -236,6 +239,7 @@ alert("Error loading questions: " + error.message);
 quizArea.classList.add("hidden");
 subjectSelection.classList.remove("hidden");
 leaderboardSection.classList.remove("hidden");
+  infoFooter.classList.remove("hidden"); // Show info section again
 }
 }
 
@@ -316,4 +320,5 @@ restartBtn.addEventListener("click", () => {
 resultArea.classList.add("hidden");
 subjectSelection.classList.remove("hidden");
 leaderboardSection.classList.remove("hidden");
+infoFooter.classList.remove("hidden"); // Show info section again
 });
