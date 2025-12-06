@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +20,15 @@
       font-family: monospace;
       font-size: 14px;
     }
+    input[type="password"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin: 10px 0;
+    }
     button {
       background: #007bff;
       color: white;
@@ -34,6 +42,17 @@
     button:hover {
       background: #0056b3;
     }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+    }
     #log {
       margin-top: 20px;
       white-space: pre-wrap;
@@ -44,93 +63,188 @@
       max-height: 300px;
       overflow-y: auto;
     }
+    #loginSection {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    #uploadSection {
+      display: none;
+    }
+    .error {
+      color: #dc3545;
+      margin-top: 10px;
+    }
+    .success {
+      color: #28a745;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
+  <div id="loginSection">
+    <h1>Login Required</h1>
+    <p>Please enter the password to access the uploader.</p>
+    <input type="password" id="passwordInput" placeholder="Enter password">
+    <br>
+    <button id="loginBtn">Login</button>
+    <div id="loginMessage"></div>
+  </div>
 
-  <h1>Science Question Uploader</h1>
-  <p>Paste your <b>questions JSON</b> below and click “Upload to Firestore”.</p>
-  <label for="subjectSelect"><b>Select Subject:</b></label>
-<select id="subjectSelect">
-  <option value="">-- Choose Subject --</option>
-  <option value="Science">Science</option>
-  <option value="Computer">Computer</option>
-  <option value="Mathematics">Mathematics</option>
-  <option value="History">History</option>
-  <option value="Geography">Geography</option>
-</select>
-
-  <textarea id="jsonInput" placeholder='password'></textarea>
-  <br>
-  <button id="uploadBtn">Upload to Firestore</button>
-
-  <div id="log"></div>
+  <div id="uploadSection">
+    <h1>Science Question Uploader</h1>
+    <p>Paste your <b>questions JSON</b> below and click "Upload to Firestore".</p>
+    <label for="subjectSelect"><b>Select Subject:</b></label>
+    <select id="subjectSelect">
+      <option value="">-- Choose Subject --</option>
+      <option value="Science">Science</option>
+      <option value="Computer">Computer</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="History">History</option>
+      <option value="Geography">Geography</option>
+    </select>
+    <textarea id="jsonInput" placeholder='JSON'></textarea>
+    <br>
+    <button id="uploadBtn">Upload to Firestore</button>
+    <button id="logoutBtn" style="background: #6c757d; margin-left: 10px;">Logout</button>
+    <div id="log"></div>
+  </div>
 
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCFX4R2OYeDlGYr1ApA24IhIJAg8G7COIk",
-    authDomain: "earnings-calculator-3f7d4.firebaseapp.com",
-    projectId: "earnings-calculator-3f7d4",
-    storageBucket: "earnings-calculator-3f7d4.firebasestorage.app",
-    messagingSenderId: "234683714234",
-    appId: "1:234683714234:web:9259e1b5fbe9bcbfb19083",
-    measurementId: "G-QS4X1MNVKB"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFX4R2OYeDlGYr1ApA24IhIJAg8G7COIk",
+      authDomain: "earnings-calculator-3f7d4.firebaseapp.com",
+      projectId: "earnings-calculator-3f7d4",
+      storageBucket: "earnings-calculator-3f7d4.firebasestorage.app",
+      messagingSenderId: "234683714234",
+      appId: "1:234683714234:web:9259e1b5fbe9bcbfb19083",
+      measurementId: "G-QS4X1MNVKB"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-  const logDiv = document.getElementById("log");
-  const uploadBtn = document.getElementById("uploadBtn");
+    const loginSection = document.getElementById("loginSection");
+    const uploadSection = document.getElementById("uploadSection");
+    const passwordInput = document.getElementById("passwordInput");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginMessage = document.getElementById("loginMessage");
+    const logDiv = document.getElementById("log");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  function log(msg) {
-    logDiv.textContent += msg + "\n";
-    logDiv.scrollTop = logDiv.scrollHeight;
-  }
+    let isAuthenticated = false;
 
-  async function upload() {
-    const input = document.getElementById("jsonInput").value.trim();
-    const subject = document.getElementById("subjectSelect").value.trim();
-
-    if (!input) return alert("Please paste your questions JSON first.");
-    if (!subject) return alert("Please select a subject.");
-
-    let questions;
-    try {
-      questions = JSON.parse(input);
-    } catch (e) {
-      return alert("Invalid JSON format. Please check your text.");
+    function log(msg) {
+      logDiv.textContent += msg + "\n";
+      logDiv.scrollTop = logDiv.scrollHeight;
     }
 
-    uploadBtn.disabled = true;
-    log(`Signing in anonymously...`);
-    await signInAnonymously(auth);
-
-    log(`Uploading ${questions.length} questions to '${subject}'...`);
-
-    let count = 0;
-    for (const q of questions) {
+    async function verifyPassword(enteredPassword) {
       try {
-        await addDoc(collection(db, "questions", subject, "items"), q);
-        count++;
-        log(`✅ Uploaded: ${q.question.substring(0, 80)}...`);
-      } catch (err) {
-        log(`❌ Error: ${err.message}`);
+        await signInAnonymously(auth);
+        const passwordDocRef = doc(db, "password", "password");
+        const passwordDoc = await getDoc(passwordDocRef);
+        
+        if (passwordDoc.exists()) {
+          const correctPassword = passwordDoc.data().password;
+          return enteredPassword === correctPassword;
+        } else {
+          loginMessage.innerHTML = '<div class="error">Password configuration not found in database.</div>';
+          return false;
+        }
+      } catch (error) {
+        loginMessage.innerHTML = `<div class="error">Error verifying password: ${error.message}</div>`;
+        return false;
       }
     }
 
-    log(`\n🎉 Done! Successfully uploaded ${count} questions to ${subject}.`);
-    uploadBtn.disabled = false;
-  }
+    loginBtn.addEventListener("click", async () => {
+      const password = passwordInput.value.trim();
+      if (!password) {
+        loginMessage.innerHTML = '<div class="error">Please enter a password.</div>';
+        return;
+      }
 
-  uploadBtn.addEventListener("click", upload);
-</script>
+      loginBtn.disabled = true;
+      loginMessage.innerHTML = '<div>Verifying password...</div>';
 
+      const isValid = await verifyPassword(password);
+      
+      if (isValid) {
+        isAuthenticated = true;
+        loginSection.style.display = "none";
+        uploadSection.style.display = "block";
+        loginMessage.innerHTML = '';
+      } else {
+        loginMessage.innerHTML = '<div class="error">Incorrect password. Please try again.</div>';
+        passwordInput.value = '';
+      }
+      
+      loginBtn.disabled = false;
+    });
 
+    passwordInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        loginBtn.click();
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      isAuthenticated = false;
+      loginSection.style.display = "block";
+      uploadSection.style.display = "none";
+      passwordInput.value = "";
+      logDiv.textContent = "";
+      document.getElementById("jsonInput").value = "";
+    });
+
+    async function upload() {
+      if (!isAuthenticated) {
+        alert("Please login first.");
+        return;
+      }
+
+      const input = document.getElementById("jsonInput").value.trim();
+      const subject = document.getElementById("subjectSelect").value.trim();
+      
+      if (!input) return alert("Please paste your questions JSON first.");
+      if (!subject) return alert("Please select a subject.");
+
+      let questions;
+      try {
+        questions = JSON.parse(input);
+      } catch (e) {
+        return alert("Invalid JSON format. Please check your text.");
+      }
+
+      uploadBtn.disabled = true;
+      log(`Uploading ${questions.length} questions to '${subject}'...`);
+
+      let count = 0;
+      for (const q of questions) {
+        try {
+          await addDoc(collection(db, "questions", subject, "items"), q);
+          count++;
+          log(`✅ Uploaded: ${q.question.substring(0, 80)}...`);
+        } catch (err) {
+          log(`❌ Error: ${err.message}`);
+        }
+      }
+
+      log(`\n🎉 Done! Successfully uploaded ${count} questions to ${subject}.`);
+      uploadBtn.disabled = false;
+    }
+
+    uploadBtn.addEventListener("click", upload);
+  </script>
 </body>
 </html>
