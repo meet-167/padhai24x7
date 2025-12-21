@@ -26,8 +26,8 @@
           <p>National leaderboard</p>
         </div>
         <div class="welcome-feature-item">
-          <h4>⚡ Instant Feedback</h4>
-          <p>Learn from mistakes</p>
+          <h4>⚡ Time Challenge</h4>
+          <p>10s per question</p>
         </div>
         <div class="welcome-feature-item">
           <h4>📊 Track Progress</h4>
@@ -52,19 +52,6 @@
   </header>
   
   <main>
-    <!-- Google ads thing
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9150794931764555"
-         crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-9150794931764555"
-         data-ad-slot="5444305506"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  -->
     <section id="subject-selection">
       <h2>Select a Subject</h2>
       <div id="subjects">
@@ -77,6 +64,12 @@
     </section>
 
     <section id="quiz-area" class="hidden">
+      <div id="timer-container">
+        <div id="timer-display">⏱️ 10s</div>
+        <div id="timer-bar-container">
+          <div id="timer-bar"></div>
+        </div>
+      </div>
       <div id="question-box"></div>
       <div id="options-box"></div>
       <button id="next-btn">Next</button>
@@ -111,6 +104,7 @@
         <ul>
           <li><strong>Comprehensive Subject Coverage:</strong> All major ICSE Grade 10 subjects including Science (Physics, Chemistry, Biology), Mathematics, History & Civics, Geography and Computer Applications.</li>
           <li><strong>Exam-Focused Questions:</strong> Every question is carefully curated to align with the latest ICSE syllabus and examination patterns, ensuring you practice with content that mirrors your board exams.</li>
+          <li><strong>Time-Based Scoring:</strong> You have 10 seconds per question. Answer quickly to earn more points - up to 10 points for correct answers within 5 seconds! Wrong answers deduct 10 points. Total score ranges from +100 to -100.</li>
           <li><strong>Competitive Learning:</strong> Our unique ELO rating system ranks students based on performance, creating a competitive yet supportive environment that motivates continuous improvement.</li>
           <li><strong>Instant Feedback:</strong> Get immediate results on every answer with correct solutions displayed instantly, helping you learn from mistakes right away.</li>
           <li><strong>Performance Tracking:</strong> Receive detailed summaries after each quiz showing your strengths and areas for improvement, making it easy to focus your study efforts.</li>
@@ -123,12 +117,17 @@
         <ul>
           <li><strong>Create Your Profile:</strong> Sign up with your name and start building your learning journey. All progress is saved automatically.</li>
           <li><strong>Choose a Subject:</strong> Select Science, Mathematics, History & Civics, Geography or Computer Applications based on what you want to practice.</li>
-          <li><strong>Take the Quiz:</strong> Answer 10 multiple-choice questions randomly selected from our extensive question bank for fresh content every time.</li>
+          <li><strong>Take the Quiz:</strong> Answer 10 multiple-choice questions with a 10-second timer for each question. Think fast!</li>
+          <li><strong>Race Against Time:</strong> Quick correct answers earn up to 10 points each. Wrong answers deduct 10 points. Unanswered questions give 0 points.</li>
           <li><strong>Get Instant Feedback:</strong> See correct and incorrect answers immediately with highlighted solutions for learning on the spot.</li>
-          <li><strong>Review Performance:</strong> View a complete summary with all questions, your answers, and correct solutions for detailed review.</li>
+          <li><strong>Review Performance:</strong> View a complete summary with all questions, your answers, time taken, and points earned for detailed review.</li>
           <li><strong>Earn ELO Points:</strong> High scores increase your rating while lower scores decrease it, keeping competition fair and skill-based.</li>
           <li><strong>Practice Regularly:</strong> Take unlimited quizzes to continuously improve your knowledge and climb the leaderboard.</li>
         </ul>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>⏱️ Scoring System:</strong> Each correct answer earns 1-10 points based on speed (faster = more points). Wrong answers deduct 10 points. Unanswered questions give 0 points. Perfect score: +100 (all correct in under 5s). Minimum score: -100 (all wrong).</p>
       </div>
 
       <div class="highlight-box">
@@ -138,8 +137,9 @@
       <div class="info-section">
         <h4>✅ Why Students Love Us</h4>
         <ul>
-          <li><strong>Makes Studying Fun:</strong> Turn boring revision into an exciting competitive game</li>
+          <li><strong>Makes Studying Fun:</strong> Turn boring revision into an exciting competitive game with time challenges</li>
           <li><strong>Builds Confidence:</strong> Regular practice with exam-style questions reduces test anxiety</li>
+          <li><strong>Improves Speed:</strong> Time pressure helps you think faster, just like in real exams</li>
           <li><strong>Identifies Weak Areas:</strong> Quickly spot topics that need more attention</li>
           <li><strong>Flexible Learning:</strong> Practice anytime, anywhere, at your own pace</li>
           <li><strong>Stay Motivated:</strong> Competition with peers keeps you engaged and improving</li>
