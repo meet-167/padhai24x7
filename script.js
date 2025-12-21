@@ -200,6 +200,7 @@ async function updatePlayerElo(scoreEarned, maxScore) {
 }
 
 function startTimer() {
+  // 🔴 CRITICAL FIX: clear any existing timer
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -236,6 +237,7 @@ function startTimer() {
     }
   }, 100);
 }
+
 
   
   timerInterval = setInterval(() => {
