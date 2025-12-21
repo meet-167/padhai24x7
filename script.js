@@ -200,18 +200,43 @@ async function updatePlayerElo(scoreEarned, maxScore) {
 }
 
 function startTimer() {
-  // Get timer elements when quiz starts
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
   if (!timerDisplay) timerDisplay = document.getElementById("timer-display");
   if (!timerBar) timerBar = document.getElementById("timer-bar");
-  
+
   questionStartTime = Date.now();
   let timeLeft = MAX_TIME_PER_QUESTION;
-  
-  if (timerDisplay) timerDisplay.textContent = `⏱️ ${timeLeft}s`;
-  if (timerBar) {
-    timerBar.style.width = "100%";
-    timerBar.style.background = "linear-gradient(90deg, #44bd32 0%, #4cd137 100%)";
-  }
+
+  timerDisplay.textContent = `⏱️ ${timeLeft}s`;
+  timerBar.style.width = "100%";
+  timerBar.style.background = "linear-gradient(90deg, #44bd32 0%, #4cd137 100%)";
+
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - questionStartTime) / 1000;
+    timeLeft = Math.ceil(MAX_TIME_PER_QUESTION - elapsed);
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      handleTimeout();
+      return;
+    }
+
+    timerDisplay.textContent = `⏱️ ${timeLeft}s`;
+    timerBar.style.width = `${(timeLeft / MAX_TIME_PER_QUESTION) * 100}%`;
+
+    if (timeLeft <= 5) {
+      timerBar.style.background = "linear-gradient(90deg, #e74c3c 0%, #c0392b 100%)";
+    } else {
+      timerBar.style.background = "linear-gradient(90deg, #f39c12 0%, #e67e22 100%)";
+    }
+  }, 100);
+}
+
   
   timerInterval = setInterval(() => {
     const elapsed = Math.floor((Date.now() - questionStartTime) / 1000);
