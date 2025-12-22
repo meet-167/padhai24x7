@@ -233,33 +233,6 @@ function startTimer() {
   }, 100);
 }
 
-
-  
-  timerInterval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - questionStartTime) / 1000);
-    timeLeft = MAX_TIME_PER_QUESTION - elapsed;
-    
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      handleTimeout();
-      return;
-    }
-    
-    if (timerDisplay) timerDisplay.textContent = `⏱️ ${timeLeft}s`;
-    if (timerBar) {
-      const percentage = (timeLeft / MAX_TIME_PER_QUESTION) * 100;
-      timerBar.style.width = percentage + "%";
-      
-      // Change color based on time remaining
-      if (timeLeft <= 5) {
-        timerBar.style.background = "linear-gradient(90deg, #e74c3c 0%, #c0392b 100%)";
-      } else if (timeLeft <= 10) {
-        timerBar.style.background = "linear-gradient(90deg, #f39c12 0%, #e67e22 100%)";
-      }
-    }
-  }, 100);
-}
-
 function stopTimer() {
   if (timerInterval) {
     clearInterval(timerInterval);
