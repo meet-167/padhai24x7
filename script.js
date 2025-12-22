@@ -162,6 +162,26 @@ async function loadLeaderboard() {
   }
 }
 
+/* ===============================
+   ANTI-REPEAT RANDOMNESS (NO IDs)
+================================ */
+const RECENT_LIMIT = 30;
+
+function getQuestionFingerprint(q) {
+  return q.question.trim() + "|" + q.options.join("|");
+}
+
+function getRecentQuestions() {
+  return JSON.parse(localStorage.getItem("recentQuestions") || "[]");
+}
+
+function saveRecentQuestions(arr) {
+  localStorage.setItem(
+    "recentQuestions",
+    JSON.stringify(arr.slice(-RECENT_LIMIT))
+  );
+}
+
 function calculateScore(timeTaken, isCorrect) {
   // Points system: 100 to -100 range for 10 questions
   // Correct answer: 0 to +10 points (based on speed)
@@ -348,7 +368,27 @@ async function startGame(subject) {
     let allQuestions = [];
     qSnap.forEach((doc) => allQuestions.push(doc.data()));
 
-    questions = shuffleArray(allQuestions).slice(0, Math.min(10, allQuestions.length));
+    const recent = getRecentQuestions();
+
+// Filter out recently asked questions
+let freshQuestions = allQuestions.filter(
+  q => !recent.includes(getQuestionFingerprint(q))
+);
+
+// If too few fresh questions, allow repeats
+if (freshQuestions.length < 10) {
+  freshQuestions = allQuestions;
+}
+
+// Pick questions
+questions = shuffleArray(freshQuestions)
+  .slice(0, Math.min(10, freshQuestions.length));
+
+// Save fingerprints of selected questions
+saveRecentQuestions([
+  ...recent,
+  ...questions.map(getQuestionFingerprint)
+]);
     showQuestion();
   } catch (error) {
     alert("Error loading questions: " + error.message);
