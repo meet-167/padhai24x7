@@ -200,11 +200,7 @@ async function updatePlayerElo(scoreEarned, maxScore) {
 }
 
 function startTimer() {
-  // 🔴 CRITICAL FIX: clear any existing timer
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
+  stopTimer();
 
   if (!timerDisplay) timerDisplay = document.getElementById("timer-display");
   if (!timerBar) timerBar = document.getElementById("timer-bar");
@@ -221,8 +217,7 @@ function startTimer() {
     timeLeft = Math.ceil(MAX_TIME_PER_QUESTION - elapsed);
 
     if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      timerInterval = null;
+      stopTimer();
       handleTimeout();
       return;
     }
