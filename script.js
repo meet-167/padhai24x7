@@ -57,32 +57,65 @@ signInAnonymously(auth)
 
 async function setupPlayer() {
   const playerRef = doc(db, "players", currentUserId);
-  const playerSnap = await getDoc(playerRef);
 
-  if (playerSnap.exists()) {
-    const data = playerSnap.data();
-    playerName = data.name;
-    playerElo = data.elo || 1000;
-    console.log("Welcome back:", playerName, "ELO:", playerElo);
-  } else {
-    playerName = prompt("Welcome to Padhlo67! 🎓\n\nPlease enter your name:");
+  try {
+    const playerSnap = await getDoc(playerRef);
 
-    if (!playerName || playerName.trim() === "") {
-      playerName = "Player" + Math.floor(Math.random() * 10000);
+    // Case 1: Player document exists and is valid
+    if (playerSnap.exists()) {
+      const data = playerSnap.data();
+
+      // Validate required fields
+      if (
+        typeof data.name === "string" &&
+        data.name.trim().length > 0 &&
+        typeof data.elo === "number"
+      ) {
+        playerName = data.name;
+        playerElo = data.elo;
+
+        console.log("Player loaded:", playerName, "ELO:", playerElo);
+
+        playerNameDisplay.textContent = playerName;
+        playerEloDisplay.textContent = `ELO: ${Math.round(playerElo)}`;
+        return;
+      }
+
+      // Document exists but is corrupted
+      console.warn("Corrupted player document detected. Resetting...");
     }
 
-    playerName = playerName.trim();
-    playerElo = 1000;
+    // Case 2: Player document missing or corrupted → reset
+    await resetPlayer(playerRef);
 
-    await setDoc(playerRef, {
-      name: playerName,
-      elo: playerElo,
-      gamesPlayed: 0,
-      createdAt: new Date().toISOString()
-    });
+  } catch (error) {
+    console.error("Error loading player data:", error);
 
-    console.log("New player created:", playerName);
+    // Final safety fallback
+    await resetPlayer(playerRef);
   }
+}
+
+async function resetPlayer(playerRef) {
+  playerName = prompt(
+    "Welcome to Padhai 24x7! 🎓\n\nPlease enter your name:"
+  );
+
+  if (!playerName || playerName.trim() === "") {
+    playerName = "Player" + Math.floor(Math.random() * 10000);
+  }
+
+  playerName = playerName.trim();
+  playerElo = 1000;
+
+  await setDoc(playerRef, {
+    name: playerName,
+    elo: playerElo,
+    gamesPlayed: 0,
+    createdAt: new Date().toISOString()
+  });
+
+  console.log("Player profile reset/created:", playerName);
 
   playerNameDisplay.textContent = playerName;
   playerEloDisplay.textContent = `ELO: ${Math.round(playerElo)}`;
