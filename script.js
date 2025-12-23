@@ -183,27 +183,19 @@ function saveRecentQuestions(arr) {
 }
 
 function calculateScore(timeTaken, isCorrect) {
-  // Points system: 100 to -100 range for 10 questions
-  // Correct answer: 0 to +10 points (based on speed)
-  // Wrong answer: -10 points (fixed penalty)
-  // Unanswered: 0 points
-  
-  if (!isCorrect) {
-    return -10; // Wrong answer penalty
-  }
-  
-  // Correct answer - give points based on speed
-  // Answer in 0-1s: 10 points
-  // Answer in 5s: 5 points
-  // Answer in 10s: 1 point
-  
-  if (timeTaken <= 5) {
-    // Linear scale from 10 points (0s) to 5 points (5s)
-    return Math.round(10 - (timeTaken * 1));
-  } else {
-    // Linear scale from 5 points (5s) to 1 point (10s)
-    return Math.round(5 - ((timeTaken - 5) * 0.8));
-  }
+  if (!isCorrect) return -10;
+
+  const maxPoints = 10;
+  const minPoints = 1;
+
+  const ratio = Math.max(
+    0,
+    1 - timeTaken / MAX_TIME_PER_QUESTION
+  );
+
+  return Math.round(
+    minPoints + ratio * (maxPoints - minPoints)
+  );
 }
 
 function calculateEloChange(score, maxScore) {
