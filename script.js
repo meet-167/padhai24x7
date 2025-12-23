@@ -43,7 +43,7 @@ let playerElo = 1000;
 // Timer variables
 let questionStartTime = null;
 let timerInterval = null;
-const MAX_TIME_PER_QUESTION = 10; // 10 seconds per question
+const MAX_TIME_PER_QUESTION = 15;
 
 // Sign in and setup player
 signInAnonymously(auth)
