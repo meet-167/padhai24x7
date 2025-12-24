@@ -40,10 +40,11 @@ let currentUserId = null;
 let playerName = null;
 let playerElo = 1000;
 
-// Timer variables
+// Timer variables - CHANGED TO TOTAL QUIZ TIMER
+let quizStartTime = null;
 let questionStartTime = null;
 let timerInterval = null;
-const MAX_TIME_PER_QUESTION = 15;
+const TOTAL_QUIZ_TIME = 180; // 3 minutes in seconds
 
 // Sign in and setup player
 signInAnonymously(auth)
@@ -61,11 +62,9 @@ async function setupPlayer() {
   try {
     const playerSnap = await getDoc(playerRef);
 
-    // Case 1: Player document exists and is valid
     if (playerSnap.exists()) {
       const data = playerSnap.data();
 
-      // Validate required fields
       if (
         typeof data.name === "string" &&
         data.name.trim().length > 0 &&
@@ -81,31 +80,26 @@ async function setupPlayer() {
         return;
       }
 
-      // Document exists but is corrupted
       console.warn("Corrupted player document detected. Resetting...");
     }
 
-    // Case 2: Player document missing or corrupted → reset
     await resetPlayer(playerRef);
 
   } catch (error) {
     console.error("Error loading player data:", error);
-
-    // Final safety fallback
     await resetPlayer(playerRef);
   }
 }
 
+// FIX: Better Player Setup (Prevents null names and handles cancel)
 async function resetPlayer(playerRef) {
-  playerName = prompt(
-    "Welcome to Padhai 24x7! 🎓\n\nPlease enter your name:"
-  );
-
-  if (!playerName || playerName.trim() === "") {
-    playerName = "Player" + Math.floor(Math.random() * 10000);
+  let name = prompt("Welcome to Padhai 24x7! 🎓\n\nPlease enter your name:");
+  
+  if (name === null || name.trim() === "") {
+    name = "Student_" + Math.floor(Math.random() * 9000 + 1000);
   }
 
-  playerName = playerName.trim();
+  playerName = name.trim().substring(0, 20); // Cap name length
   playerElo = 1000;
 
   await setDoc(playerRef, {
@@ -114,8 +108,6 @@ async function resetPlayer(playerRef) {
     gamesPlayed: 0,
     createdAt: new Date().toISOString()
   });
-
-  console.log("Player profile reset/created:", playerName);
 
   playerNameDisplay.textContent = playerName;
   playerEloDisplay.textContent = `ELO: ${Math.round(playerElo)}`;
@@ -163,7 +155,7 @@ async function loadLeaderboard() {
 }
 
 /* ===============================
-   ANTI-REPEAT RANDOMNESS (NO IDs)
+   ANTI-REPEAT RANDOMNESS
 ================================ */
 const RECENT_LIMIT = 30;
 
@@ -182,36 +174,22 @@ function saveRecentQuestions(arr) {
   );
 }
 
-function calculateScore(timeTaken, isCorrect) {
-  if (!isCorrect) return -10;
-
-  const maxPoints = 10;
-  const minPoints = 1;
-
-  const ratio = Math.max(
-    0,
-    1 - timeTaken / MAX_TIME_PER_QUESTION
-  );
-
-  return Math.round(
-    minPoints + ratio * (maxPoints - minPoints)
-  );
+function calculateSpeedBonus(totalTimeSeconds) {
+  // Speed bonus based on total quiz completion time
+  if (totalTimeSeconds < 60) return 30;
+  if (totalTimeSeconds < 120) return 20;
+  if (totalTimeSeconds < 180) return 10;
+  return 0;
 }
 
-function calculateEloChange(score, maxScore) {
-  // Normalize score to 0-1 range (handling negative scores)
-  // If score is negative, performance ratio will be less than 0.5
-  // If score is positive, performance ratio will be more than 0.5
-  const performanceRatio = (score + 100) / 200; // Convert -100 to +100 range to 0 to 1
-  const K = 32;
-  const expectedScore = 0.5;
-  const eloChange = K * (performanceRatio - expectedScore);
-  return Math.round(eloChange);
+function calculateEloChange(scoreEarned) {
+  return scoreEarned; 
 }
 
-async function updatePlayerElo(scoreEarned, maxScore) {
-  const eloChange = calculateEloChange(scoreEarned, maxScore);
-  const newElo = playerElo + eloChange;
+async function updatePlayerElo(scoreEarned) {
+  
+  const eloChange = calculateEloChange(scoreEarned);
+  const newElo = playerElo + eloChange; 
 
   const playerRef = doc(db, "players", currentUserId);
 
@@ -219,21 +197,29 @@ async function updatePlayerElo(scoreEarned, maxScore) {
     const playerSnap = await getDoc(playerRef);
     const currentData = playerSnap.data();
 
+    // Update the database with the new total
     await updateDoc(playerRef, {
       elo: newElo,
       gamesPlayed: (currentData.gamesPlayed || 0) + 1,
       lastPlayed: new Date().toISOString()
     });
 
+    // Update the local variables and UI
     playerElo = newElo;
     playerEloDisplay.textContent = `ELO: ${Math.round(playerElo)}`;
 
+    // Show the change to the user
     const eloChangeText = document.createElement("p");
     eloChangeText.className = "elo-change";
     eloChangeText.innerHTML = `
-      <strong>ELO Change: ${eloChange > 0 ? '+' : ''}${eloChange}</strong><br>
-      <span style="font-size: 0.9rem;">New ELO: ${Math.round(newElo)}</span>
+      <strong>Score added to ELO: ${eloChange > 0 ? '+' : ''}${eloChange}</strong><br>
+      <span style="font-size: 0.9rem;">Total ELO: ${Math.round(newElo)}</span>
     `;
+    
+    // Clear old elo change messages before adding new one
+    const oldChange = resultArea.querySelector(".elo-change");
+    if(oldChange) oldChange.remove();
+    
     resultArea.insertBefore(eloChangeText, summaryBox);
 
     await loadLeaderboard();
@@ -244,35 +230,41 @@ async function updatePlayerElo(scoreEarned, maxScore) {
   }
 }
 
-function startTimer() {
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function startQuizTimer() {
   stopTimer();
 
   if (!timerDisplay) timerDisplay = document.getElementById("timer-display");
   if (!timerBar) timerBar = document.getElementById("timer-bar");
 
-  questionStartTime = Date.now();
-  let timeLeft = MAX_TIME_PER_QUESTION;
+  quizStartTime = Date.now();
+  let timeLeft = TOTAL_QUIZ_TIME;
 
-  timerDisplay.textContent = `⏱️ ${timeLeft}s`;
+  timerDisplay.textContent = `⏱️ ${formatTime(timeLeft)}`;
   timerBar.style.width = "100%";
   timerBar.style.background = "linear-gradient(90deg, #44bd32 0%, #4cd137 100%)";
 
   timerInterval = setInterval(() => {
-    const elapsed = (Date.now() - questionStartTime) / 1000;
-    timeLeft = Math.ceil(MAX_TIME_PER_QUESTION - elapsed);
+    const elapsed = (Date.now() - quizStartTime) / 1000;
+    timeLeft = TOTAL_QUIZ_TIME - elapsed;
 
     if (timeLeft <= 0) {
       stopTimer();
-      handleTimeout();
+      handleQuizTimeout();
       return;
     }
 
-    timerDisplay.textContent = `⏱️ ${timeLeft}s`;
-    timerBar.style.width = `${(timeLeft / MAX_TIME_PER_QUESTION) * 100}%`;
+    timerDisplay.textContent = `⏱️ ${formatTime(timeLeft)}`;
+    timerBar.style.width = `${(timeLeft / TOTAL_QUIZ_TIME) * 100}%`;
 
-    if (timeLeft <= 5) {
+    if (timeLeft <= 30) {
       timerBar.style.background = "linear-gradient(90deg, #e74c3c 0%, #c0392b 100%)";
-    } else {
+    } else if (timeLeft <= 60) {
       timerBar.style.background = "linear-gradient(90deg, #f39c12 0%, #e67e22 100%)";
     }
   }, 100);
@@ -285,38 +277,32 @@ function stopTimer() {
   }
 }
 
-function getTimeTaken() {
-  if (!questionStartTime) return MAX_TIME_PER_QUESTION;
-  const elapsed = (Date.now() - questionStartTime) / 1000;
-  return Math.min(elapsed, MAX_TIME_PER_QUESTION);
+function getTotalTimeTaken() {
+  if (!quizStartTime) return 0;
+  return (Date.now() - quizStartTime) / 1000;
 }
 
-function handleTimeout() {
-  const q = questions[currentIndex];
-  const correctAnswer = q.options[q.correctIndex];
-  const shuffledOptions = shuffleArray(q.options);
-  const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
+function getQuestionTimeTaken() {
+  if (!questionStartTime) return 0;
+  return (Date.now() - questionStartTime) / 1000;
+}
+
+function handleQuizTimeout() {
+  // Mark all remaining questions as unanswered
+  while (currentIndex < questions.length) {
+    const q = questions[currentIndex];
+    answersSummary.push({
+      question: q.question,
+      yourAnswer: "⏱️ Time's up!",
+      correctAnswer: q.options[q.correctIndex],
+      correct: false,
+      timeTaken: 0,
+      pointsEarned: 0
+    });
+    currentIndex++;
+  }
   
-  const buttons = optionsBox.querySelectorAll("button");
-  buttons.forEach((btn, i) => {
-    btn.disabled = true;
-    btn.style.cursor = "not-allowed";
-    if (i === newCorrectIndex) {
-      btn.classList.add("correct");
-    }
-  });
-  
-  answersSummary.push({
-    question: q.question,
-    yourAnswer: "⏱️ Time's up!",
-    correctAnswer: correctAnswer,
-    correct: false,
-    timeTaken: MAX_TIME_PER_QUESTION,
-    pointsEarned: 0
-  });
-  
-  if (timerDisplay) timerDisplay.textContent = "⏱️ Time's up!";
-  nextBtn.style.display = "block";
+  endGame();
 }
 
 subjectButtons.forEach((btn) => {
@@ -343,6 +329,7 @@ async function startGame(subject) {
   score = 0;
   currentIndex = 0;
   answersSummary = [];
+  quizStartTime = null;
 
   try {
     const itemsRef = collection(db, "questions", subject, "items");
@@ -362,25 +349,23 @@ async function startGame(subject) {
 
     const recent = getRecentQuestions();
 
-// Filter out recently asked questions
-let freshQuestions = allQuestions.filter(
-  q => !recent.includes(getQuestionFingerprint(q))
-);
+    let freshQuestions = allQuestions.filter(
+      q => !recent.includes(getQuestionFingerprint(q))
+    );
 
-// If too few fresh questions, allow repeats
-if (freshQuestions.length < 10) {
-  freshQuestions = allQuestions;
-}
+    if (freshQuestions.length < 10) {
+      freshQuestions = allQuestions;
+    }
 
-// Pick questions
-questions = shuffleArray(freshQuestions)
-  .slice(0, Math.min(10, freshQuestions.length));
+    questions = shuffleArray(freshQuestions)
+      .slice(0, Math.min(10, freshQuestions.length));
 
-// Save fingerprints of selected questions
-saveRecentQuestions([
-  ...recent,
-  ...questions.map(getQuestionFingerprint)
-]);
+    saveRecentQuestions([
+      ...recent,
+      ...questions.map(getQuestionFingerprint)
+    ]);
+    
+    startQuizTimer(); // Start the 3-minute timer
     showQuestion();
   } catch (error) {
     alert("Error loading questions: " + error.message);
@@ -412,12 +397,11 @@ function showQuestion() {
   });
 
   nextBtn.style.display = "none";
-  startTimer();
+  questionStartTime = Date.now(); // Track when this question started
 }
 
 function checkAnswer(selected, correct, selectedText, correctAnswer, questionText) {
-  stopTimer();
-  const timeTaken = getTimeTaken();
+  const timeTaken = getQuestionTimeTaken();
   
   const buttons = optionsBox.querySelectorAll("button");
   buttons.forEach((btn) => {
@@ -429,12 +413,12 @@ function checkAnswer(selected, correct, selectedText, correctAnswer, questionTex
   let pointsEarned = 0;
   
   if (selected === correct) {
-    pointsEarned = calculateScore(timeTaken, true);
+    pointsEarned = 10; // Fixed points for correct answer
     score += pointsEarned;
     buttons[selected].classList.add("correct");
     isCorrect = true;
   } else {
-    pointsEarned = calculateScore(timeTaken, false);
+    pointsEarned = -10; // Penalty for wrong answer
     score += pointsEarned;
     buttons[selected].classList.add("wrong");
     buttons[correct].classList.add("correct");
@@ -462,9 +446,15 @@ async function endGame() {
   quizArea.classList.add("hidden");
   resultArea.classList.remove("hidden");
   
-  const maxScore = 100; // Best possible: all correct in <5s
+  const totalTimeTaken = getTotalTimeTaken();
   const correctAnswers = answersSummary.filter(a => a.correct).length;
   const percentage = Math.round((correctAnswers / questions.length) * 100);
+  const speedBonus = calculateSpeedBonus(totalTimeTaken);
+  const finalScoreValue = score + speedBonus;
+  
+  // Calculate average time per question
+  const totalQuestionTime = answersSummary.reduce((sum, a) => sum + parseFloat(a.timeTaken || 0), 0);
+  const avgTimePerQuestion = totalQuestionTime / questions.length;
   
   // Calculate score color based on percentage
   let scoreColor = "#44bd32"; // green
@@ -481,12 +471,22 @@ async function endGame() {
     <div style="font-size: 1.5rem; color: #667eea; margin: 10px 0;">
       ${percentage}% Correct
     </div>
-    <div style="font-size: 1rem; color: #667eea; margin-top: 15px;">
-      Average time: ${(answersSummary.reduce((sum, a) => sum + parseFloat(a.timeTaken), 0) / questions.length).toFixed(1)}s
+    <div style="font-size: 1.1rem; color: #273c75; margin: 15px 0;">
+      ⏱️ Total Time: <strong>${formatTime(totalTimeTaken)}</strong>
+    </div>
+    <div style="font-size: 1rem; color: #667eea; margin: 10px 0;">
+      Average per question: ${avgTimePerQuestion.toFixed(1)}s
+    </div>
+    <div style="font-size: 1.3rem; color: #44bd32; margin: 20px 0; font-weight: bold;">
+      ${speedBonus > 0 ? `🚀 Speed Bonus: +${speedBonus} points!` : ''}
+    </div>
+    <div style="font-size: 1.2rem; color: #273c75; margin: 10px 0;">
+      Final Score: <strong style="color: ${scoreColor}">${finalScoreValue > 0 ? '+' : ''}${finalScoreValue}</strong>
     </div>
   `;
 
-  await updatePlayerElo(score, maxScore);
+  const maxScore = 130; // 10 correct (100) + max speed bonus (30)
+  await updatePlayerElo(finalScoreValue);
 
   summaryBox.innerHTML = "<h3>Question Summary</h3>";
   answersSummary.forEach((a, i) => {
@@ -495,7 +495,6 @@ async function endGame() {
     
     let pointsColor = "#44bd32";
     if (a.pointsEarned < 0) pointsColor = "#e74c3c";
-    else if (a.pointsEarned < 5) pointsColor = "#f39c12";
     
     div.innerHTML = `
       <p><strong>Q${i + 1}.</strong> ${a.question}</p>
