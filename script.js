@@ -54,14 +54,14 @@ async function incrementVisitCounter(counterId) {
 
   try {
     const snap = await getDoc(counterRef);
-    
     if (!snap.exists()) {
       console.log(`${counterId} doesn't exist. Creating now...`);
       await setDoc(counterRef, { number: 1 });
     } else {
       console.log(`${counterId} exists. Incrementing...`);
+
       await updateDoc(counterRef, {
-        number: increment(1)
+        number: increment(1) 
       });
     }
     console.log(`✅ ${counterId} updated successfully!`);
@@ -69,7 +69,6 @@ async function incrementVisitCounter(counterId) {
     console.error(`❌ Error updating ${counterId}:`, e);
   }
 }
-
 signInAnonymously(auth)
   .then(async (userCredential) => {
     currentUserId = userCredential.user.uid;
