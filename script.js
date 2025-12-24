@@ -8,7 +8,8 @@ import {
   query,
   orderBy,
   limit,
-  updateDoc
+  updateDoc,
+  runTransaction
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 const subjectButtons = document.querySelectorAll("#subjects button");
@@ -46,11 +47,34 @@ let questionStartTime = null;
 let timerInterval = null;
 const TOTAL_QUIZ_TIME = 180; // 3 minutes in seconds
 
+async function incrementVisitCounter(counterId) {
+  const counterRef = doc(db, "visits", counterId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const counterSnap = await transaction.get(counterRef);
+      if (!counterSnap.exists()) {
+        // If the doc doesn't exist yet, create it with 1
+        transaction.set(counterRef, { number: 1 });
+      } else {
+        // Increment the existing number
+        const newNum = (counterSnap.data().number || 0) + 1;
+        transaction.update(counterRef, { number: newNum });
+      }
+    });
+    console.log(`Counter ${counterId} incremented.`);
+  } catch (e) {
+    console.error(`Failed to increment ${counterId}:`, e);
+  }
+}
+
 // Sign in and setup player
 signInAnonymously(auth)
   .then(async (userCredential) => {
     currentUserId = userCredential.user.uid;
     console.log("Signed in with ID:", currentUserId);
+    
+    incrementVisitCounter("totalVisits"); 
+    
     await setupPlayer();
     await loadLeaderboard();
   })
@@ -72,17 +96,17 @@ async function setupPlayer() {
       ) {
         playerName = data.name;
         playerElo = data.elo;
-
-        console.log("Player loaded:", playerName, "ELO:", playerElo);
-
         playerNameDisplay.textContent = playerName;
         playerEloDisplay.textContent = `ELO: ${Math.round(playerElo)}`;
         return;
       }
-
-      console.warn("Corrupted player document detected. Resetting...");
+    } else {
+      // IF PLAYER DOES NOT EXIST: This is a brand new user
+      console.log("New user detected! Logging join...");
+      await incrementVisitCounter("newUserJoined"); 
     }
 
+    // This handles both brand new users and corrupted data resets
     await resetPlayer(playerRef);
 
   } catch (error) {
@@ -91,7 +115,7 @@ async function setupPlayer() {
   }
 }
 
-// FIX: Better Player Setup (Prevents null names and handles cancel)
+// Prevents null names
 async function resetPlayer(playerRef) {
   let name = prompt("Welcome to Padhai 24x7! 🎓\n\nPlease enter your name:");
   
@@ -99,7 +123,7 @@ async function resetPlayer(playerRef) {
     name = "Student_" + Math.floor(Math.random() * 9000 + 1000);
   }
 
-  playerName = name.trim().substring(0, 20); // Cap name length
+  playerName = name.trim().substring(0, 20);
   playerElo = 1000;
 
   await setDoc(playerRef, {
