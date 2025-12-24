@@ -49,32 +49,32 @@ const TOTAL_QUIZ_TIME = 180; // 3 minutes in seconds
 
 async function incrementVisitCounter(counterId) {
   const counterRef = doc(db, "visits", counterId);
+  console.log(`Checking counter: ${counterId}...`);
+
   try {
-    await runTransaction(db, async (transaction) => {
-      const counterSnap = await transaction.get(counterRef);
-      if (!counterSnap.exists()) {
-        // If the doc doesn't exist yet, create it with 1
-        transaction.set(counterRef, { number: 1 });
-      } else {
-        // Increment the existing number
-        const newNum = (counterSnap.data().number || 0) + 1;
-        transaction.update(counterRef, { number: newNum });
-      }
-    });
-    console.log(`Counter ${counterId} incremented.`);
+    const snap = await getDoc(counterRef);
+    
+    if (!snap.exists()) {
+      console.log(`${counterId} doesn't exist. Creating now...`);
+      await setDoc(counterRef, { number: 1 });
+    } else {
+      console.log(`${counterId} exists. Incrementing...`);
+      await updateDoc(counterRef, {
+        number: increment(1)
+      });
+    }
+    console.log(`✅ ${counterId} updated successfully!`);
   } catch (e) {
-    console.error(`Failed to increment ${counterId}:`, e);
+    console.error(`❌ Error updating ${counterId}:`, e);
   }
 }
 
-// Sign in and setup player
 signInAnonymously(auth)
   .then(async (userCredential) => {
     currentUserId = userCredential.user.uid;
     console.log("Signed in with ID:", currentUserId);
     
-    incrementVisitCounter("totalVisits"); 
-    
+    await incrementVisitCounter("totalVisits");
     await setupPlayer();
     await loadLeaderboard();
   })
