@@ -9,7 +9,8 @@ import {
   orderBy,
   limit,
   updateDoc,
-  runTransaction
+  runTransaction,
+  increment
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 const subjectButtons = document.querySelectorAll("#subjects button");
