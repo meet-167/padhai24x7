@@ -54,12 +54,6 @@ main {
   font-weight: bold;
   color: #273c75;
   margin-bottom: 12px;
-  animation: pulse-timer 1s ease-in-out infinite;
-}
-
-@keyframes pulse-timer {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 #timer-bar-container {
@@ -915,4 +909,60 @@ button:focus {
     box-shadow: none;
     border: 2px solid #273c75;
   }
+}
+
+/* Complete Options Box Styling */
+#options-box button {
+  padding: 18px 25px;
+  width: 100%;
+  background-color: #f8f9fa;
+  color: #273c75;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: block;
+}
+
+#options-box button:hover:not(:disabled) {
+  background-color: #edf2ff;
+  border-color: #667eea;
+  transform: translateX(5px);
+}
+
+/* Correct/Wrong Feedback */
+#options-box button.correct {
+  background-color: #c6f6d5 !important;
+  border-color: #48bb78 !important;
+  color: #22543d !important;
+  font-weight: bold;
+}
+
+#options-box button.wrong {
+  background-color: #fed7d7 !important;
+  border-color: #f56565 !important;
+  color: #742a2a !important;
+}
+
+#next-btn {
+  margin-top: 20px;
+  background: #273c75;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  float: right;
+}
+
+/* Responsive fixes for Mobile */
+@media (max-width: 600px) {
+  #welcome-modal { padding: 20px; }
+  .welcome-features { grid-template-columns: 1fr; }
+  header h1 { font-size: 1.8rem; }
+  #quiz-area { padding: 20px; }
 }
