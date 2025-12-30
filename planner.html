@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="planner-style.css">
+  <title>Smart Planner - Padhai 24x7</title>
+</head>
+<body>
+  <header>
+    <h1>📚 Smart Planner</h1>
+    <p>Track your ICSE Grade 10 preparation progress</p>
+    <nav>
+      <a href="index.html" class="nav-btn">🏠 Back to Quizzes</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section id="subject-selection">
+      <h2>Select a Subject</h2>
+      <div id="subjects">
+        <button data-subject="Mathematics">🔢 Mathematics</button>
+        <button data-subject="Physics">⚛️ Physics</button>
+        <button data-subject="Chemistry">🧪 Chemistry</button>
+        <button data-subject="Biology">🧬 Biology</button>
+        <button data-subject="English">📖 English Literature</button>
+        <button data-subject="History">📜 History & Civics</button>
+        <button data-subject="Geography">🌐 Geography</button>
+        <button data-subject="Computer">💻 Computer</button>
+      </div>
+    </section>
+
+    <section id="planner-area" class="hidden">
+      <div class="planner-header">
+        <h2 id="current-subject-title">Mathematics</h2>
+        <button id="back-btn">← Back to Subjects</button>
+      </div>
+
+      <div class="progress-summary">
+        <div class="progress-card">
+          <span class="progress-label">📖 Learning</span>
+          <span class="progress-count" id="learning-count">0/0</span>
+        </div>
+        <div class="progress-card">
+          <span class="progress-label">🔄 Revision</span>
+          <span class="progress-count" id="revision-count">0/0</span>
+        </div>
+        <div class="progress-card">
+          <span class="progress-label">✏️ Practice</span>
+          <span class="progress-count" id="practice-count">0/0</span>
+        </div>
+        <div class="progress-card">
+          <span class="progress-label">✅ Completed</span>
+          <span class="progress-count" id="completed-count">0/0</span>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="clear-all-btn" class="action-btn danger">Clear All Progress</button>
+        <button id="export-btn" class="action-btn">📥 Export Progress</button>
+      </div>
+
+      <div id="chapters-container">
+        <table id="chapters-table">
+          <thead>
+            <tr>
+              <th>Chapter</th>
+              <th>📖 Learning</th>
+              <th>🔄 Revision</th>
+              <th>✏️ Practice</th>
+            </tr>
+          </thead>
+          <tbody id="chapters-body">
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made in India 🇮🇳</p>
+    <p>2025 Padhai24x7 - Meet Shah</p>
+  </footer>
+
+  <script src="planner.js"></script>
+</body>
+</html>
