@@ -42,24 +42,32 @@ main {
 
 .player-info {
   display: flex;
-  align-items: center;           /* fixes vertical centering */
+  align-items: center;
+  justify-content: center;
   gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
 }
 
-/* Shared pill style */
 .header-pill {
   display: inline-flex;
-  align-items: center;           /* centers text vertically */
+  align-items: center;
   justify-content: center;
-  height: 32px;                  /* FIXED height */
-  padding: 0 12px;               /* horizontal padding only */
+  height: 32px;
+  padding: 0 14px;
   font-size: 0.85rem;
   font-weight: 600;
-  line-height: 1;                /* removes extra height */
+  line-height: 1;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  color: white;
+
+  /* MATCH HEADER */
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(6px);
   white-space: nowrap;
+  text-decoration: none;
 }
 
 
@@ -508,32 +516,6 @@ footer {
 footer p {
   margin: 5px 0;
   font-size: 0.95rem;
-}
-
-.player-info {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  font-size: 1.05rem;
-  flex-wrap: wrap;
-}
-
-#player-name-display {
-  background: rgba(255, 255, 255, 0.25);
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-#player-elo-display {
-  background: linear-gradient(135deg, #44bd32 0%, #4cd137 100%);
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(68, 189, 50, 0.4);
 }
 
 /* Leaderboard */
