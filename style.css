@@ -42,31 +42,26 @@ main {
 
 .player-info {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  font-size: 0.95rem;
+  align-items: center;           /* fixes vertical centering */
+  gap: 12px;
+}
+
+/* Shared pill style */
+.header-pill {
+  display: inline-flex;
+  align-items: center;           /* centers text vertically */
+  justify-content: center;
+  height: 32px;                  /* FIXED height */
+  padding: 0 12px;               /* horizontal padding only */
+  font-size: 0.85rem;
   font-weight: 600;
-}
-
-.player-info span {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 6px 14px;
+  line-height: 1;                /* removes extra height */
   border-radius: 999px;
-}
-
-.planner-link {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 6px 14px;
-  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
   color: white;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.planner-link:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
 
 /* Timer Styles */
 #timer-container {
