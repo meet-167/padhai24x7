@@ -54,7 +54,6 @@ const chaptersData = {
     "Practical Chemistry"
   ],
   Biology: [
-    "Cell Biology",
     "Cell Division",
     "Genetics",
     "Absorption by Roots",
@@ -72,21 +71,19 @@ const chaptersData = {
     "Pollution"
   ],
   English: [
-    "The Merchant of Venice - Act 1",
-    "The Merchant of Venice - Act 2",
-    "The Merchant of Venice - Act 3",
-    "The Merchant of Venice - Act 4",
-    "The Merchant of Venice - Act 5",
-    "Poetry - The Heart of the Tree",
-    "Poetry - The Cold Within",
-    "Poetry - The Bangle Sellers",
-    "Poetry - After Blenheim",
-    "Poetry - Television",
-    "Short Stories - Chief Seattle's Speech",
-    "Short Stories - Old Man at the Bridge",
-    "Short Stories - A Horse and Two Goats",
-    "Short Stories - Hearts and Hands",
-    "Short Stories - A Face in the Dark"
+    "Julius Caesar - Act 3",
+    "Julius Caesar - Act 4",
+    "Julius Caesar - Act 5",
+    "Poetry - Haunted Houses",
+    "Poetry - The Glove and The Lion",
+    "Poetry - When Great Trees Fall",
+    "Poetry - A Considerable Speck",
+    "Poetry - Power of Music",
+    "Prose - With the Photographer",
+    "Prose - The Elevator",
+    "Prose - The Girl Who Can",
+    "Prose - The Pedestrian",
+    "Prose - The Last Lesson"
   ],
   History: [
     "The First World War",
