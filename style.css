@@ -162,6 +162,7 @@ main {
   width: 100%;
   max-width: 800px;
   border: 1px solid rgba(255,255,255,0.8);
+  scroll-margin-top: 140px;
 }
 
 /* Timer */
