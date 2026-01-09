@@ -1,3 +1,8 @@
+/* =========================================
+   1. GLOBAL & ANIMATED BACKGROUND
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,213 +10,209 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #2f3640;
-  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  /* Matching the Main Site's Animated Background */
+  background: linear-gradient(-45deg, #4776E6, #8E54E9, #23d5ab, #23a6d5);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  color: #2d3436;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =========================================
+   2. HEADER & NAVIGATION
+   ========================================= */
 header {
-  background-color: #273c75;
-  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   padding: 30px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 header h1 {
   font-size: 2.5rem;
-  margin-bottom: 10px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 header p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-  margin-bottom: 15px;
-}
-
-nav {
-  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 20px;
 }
 
 .nav-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
   padding: 10px 25px;
-  border-radius: 25px;
+  border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   transition: all 0.3s ease;
   display: inline-block;
 }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
+/* =========================================
+   3. MAIN CONTENT AREA
+   ========================================= */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   padding: 40px 20px;
-}
-
-/* Subject Selection */
-#subject-selection {
+  max-width: 1200px;
+  margin: 0 auto;
   width: 100%;
-  max-width: 1000px;
 }
 
+/* Subject Buttons Grid */
 #subject-selection h2 {
   color: white;
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-bottom: 30px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-weight: 700;
 }
 
 #subjects {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  padding: 0 20px;
+  width: 100%;
 }
 
 #subjects button {
-  background: linear-gradient(135deg, #44bd32 0%, #4cd137 100%);
-  color: white;
+  background: rgba(255, 255, 255, 0.95);
+  color: #4776E6;
   border: none;
-  padding: 20px 30px;
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 25px 20px;
+  border-radius: 20px;
+  font-family: 'Poppins', sans-serif;
   font-size: 1.1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(68, 189, 50, 0.4);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 #subjects button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(68, 189, 50, 0.6);
+  transform: translateY(-8px);
+  background: #fff;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  color: #8E54E9;
 }
 
-/* Planner Area */
+/* =========================================
+   4. PLANNER DASHBOARD (GLASS CARD)
+   ========================================= */
 #planner-area {
-  background: white;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 30px;
   padding: 40px;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.8);
 }
 
 .planner-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-  gap: 15px;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #f0f2f5;
+  padding-bottom: 20px;
 }
 
 .planner-header h2 {
   color: #273c75;
   font-size: 2rem;
+  font-weight: 800;
 }
 
 #back-btn {
-  background: #667eea;
-  color: white;
+  background: #f0f2f5;
+  color: #273c75;
   border: none;
-  padding: 10px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 12px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 #back-btn:hover {
-  background: #5568d3;
-  transform: translateX(-3px);
+  background: #e2e8f0;
+  transform: translateX(-5px);
 }
 
-/* Progress Summary */
+/* Progress Cards */
 .progress-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .progress-card {
-  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 5px solid #667eea;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  border: 1px solid #eef2ff;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s;
+}
+
+.progress-card:hover {
+  transform: translateY(-5px);
 }
 
 .progress-label {
-  font-size: 1rem;
-  color: #273c75;
+  font-size: 0.9rem;
+  color: #636e72;
   font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .progress-count {
   font-size: 1.8rem;
-  color: #667eea;
-  font-weight: bold;
+  color: #4776E6;
+  font-weight: 800;
 }
 
-/* Action Buttons */
-.action-buttons {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 30px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.action-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  background: #667eea;
-  color: white;
-}
-
-.action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.action-btn.danger {
-  background: #e74c3c;
-}
-
-.action-btn.danger:hover {
-  background: #c0392b;
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
-}
-
-/* Chapters Table */
+/* =========================================
+   5. TABLE STYLING
+   ========================================= */
 #chapters-container {
-  overflow-x: auto;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #eee;
 }
 
 #chapters-table {
@@ -221,157 +222,94 @@ main {
 }
 
 #chapters-table thead {
-  background: #273c75;
-  color: white;
-}
-
-#chapters-table th {
-  padding: 18px 15px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-#chapters-table th:first-child {
-  border-radius: 12px 0 0 0;
-}
-
-#chapters-table th:last-child {
-  border-radius: 0 12px 0 0;
-}
-
-#chapters-table tbody tr {
-  border-bottom: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
-}
-
-#chapters-table tbody tr:hover {
   background: #f8f9fa;
 }
 
-#chapters-table tbody tr:last-child {
-  border-bottom: none;
+#chapters-table th {
+  padding: 20px;
+  text-align: left;
+  color: #273c75;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
 }
 
 #chapters-table td {
-  padding: 18px 15px;
-  text-align: left;
+  padding: 20px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+#chapters-table tbody tr:hover {
+  background: #fcfdff;
 }
 
 #chapters-table td:first-child {
   font-weight: 600;
-  color: #273c75;
-  font-size: 1rem;
+  color: #2d3436;
+  width: 40%;
 }
 
-/* Checkbox Styling */
+/* Custom Checkboxes */
 .checkbox-cell {
   text-align: center;
 }
 
 .custom-checkbox {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   cursor: pointer;
-  accent-color: #44bd32;
-  transform: scale(1.2);
+  accent-color: #4cd137;
+  transition: transform 0.2s;
 }
 
-.custom-checkbox:hover {
-  transform: scale(1.3);
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  justify-content: flex-end;
 }
 
-.hidden {
-  display: none !important;
+.action-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  background: #4776E6;
+  color: white;
+  font-family: 'Poppins', sans-serif;
 }
+
+.action-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.action-btn.danger {
+  background: #ff7675;
+}
+
+/* =========================================
+   6. FOOTER & UTILS
+   ========================================= */
+.hidden { display: none !important; }
 
 footer {
-  background-color: #2f3640;
-  color: white;
-  padding: 20px;
+  text-align: center;
+  padding: 25px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0,0,0,0.2);
   margin-top: auto;
-  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
-footer p {
-  margin: 5px 0;
-  font-size: 0.95rem;
-}
-
-/* Responsive Design */
+/* Mobile Adjustments */
 @media (max-width: 768px) {
-  header h1 {
-    font-size: 2rem;
-  }
-
-  #planner-area {
-    padding: 25px 20px;
-  }
-
-  .planner-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .planner-header h2 {
-    font-size: 1.6rem;
-  }
-
-  .progress-summary {
-    grid-template-columns: 1fr;
-  }
-
-  .action-buttons {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .action-btn {
-    flex: 1;
-    min-width: 140px;
-  }
-
-  #chapters-table {
-    font-size: 0.9rem;
-  }
-
-  #chapters-table th,
-  #chapters-table td {
-    padding: 12px 10px;
-  }
-
-  #chapters-table td:first-child {
-    font-size: 0.95rem;
-  }
-
-  .custom-checkbox {
-    transform: scale(1);
-  }
-}
-
-@media (max-width: 480px) {
-  header h1 {
-    font-size: 1.6rem;
-  }
-
-  #subjects {
-    grid-template-columns: 1fr;
-  }
-
-  #planner-area {
-    padding: 20px 15px;
-  }
-
-  .progress-count {
-    font-size: 1.5rem;
-  }
-
-  #chapters-table {
-    font-size: 0.85rem;
-  }
-
-  #chapters-table th,
-  #chapters-table td {
-    padding: 10px 8px;
-  }
+  #planner-area { padding: 20px; }
+  .planner-header { flex-direction: column; gap: 20px; text-align: center; }
+  .action-buttons { justify-content: center; }
+  .action-btn { flex: 1; font-size: 0.8rem; }
+  #chapters-table th, #chapters-table td { padding: 12px; font-size: 0.85rem; }
 }
