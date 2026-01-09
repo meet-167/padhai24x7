@@ -345,6 +345,7 @@ function shuffleArray(array) {
 }
 
 async function startGame(subject) {
+  document.querySelector("header").style.position = "static";
   subjectSelection.classList.add("hidden");
   leaderboardSection.classList.add("hidden");
   infoFooter.classList.add("hidden");
@@ -532,6 +533,7 @@ async function endGame() {
 }
 
 restartBtn.addEventListener("click", () => {
+  document.querySelector("header").style.position = "sticky";
   resultArea.classList.add("hidden");
   subjectSelection.classList.remove("hidden");
   leaderboardSection.classList.remove("hidden");
