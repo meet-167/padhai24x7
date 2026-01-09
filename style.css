@@ -498,6 +498,8 @@ main {
   width: 100%;
   max-width: 1000px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  margin-top: 50px;
+  text-align: center;
 }
 
 .info-footer h3, .info-footer h4 {
@@ -537,6 +539,66 @@ main {
 
 .cta-final p {
     color: white !important;
+}
+
+.info-header h3 {
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.info-header p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 40px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-card.highlight {
+  background: white;
+  border: 2px solid #4776E6;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+}
+
+.feature-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card h4 {
+  color: #2d3436;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.feature-card p {
+  font-size: 0.9rem;
+  color: #636e72;
+  line-height: 1.6;
+}
+
+.mission-statement {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 15px;
+  color: white;
+  font-size: 0.95rem;
 }
 
 /* =========================================
