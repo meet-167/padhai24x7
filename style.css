@@ -50,13 +50,13 @@ header h1 {
   font-weight: 800;
   color: #212121;
   text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   letter-spacing: -1px;
 }
 
 header p {
   color: #212121;
-  font-size: 1rem;
+  font-size: 0.6rem;
   font-weight: 400;
 }
 
@@ -71,8 +71,8 @@ header p {
 .header-pill {
   background: rgba(255, 255, 255, 0.25);
   color: #212121;
-  padding: 8px 20px;
-  border-radius: 50px;
+  padding: 7px 15px;
+  border-radius: 45px;
   font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -127,7 +127,7 @@ main {
 #subjects {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  gap: 15px;
   padding: 0 10px;
 }
 
@@ -667,7 +667,7 @@ main {
 }
 
 .mission-statement {
-  background: rgba(0, 0, 0, 0.2);
+  background: dimgray;
   padding: 20px;
   border-radius: 15px;
   color: white;
