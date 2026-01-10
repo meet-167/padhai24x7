@@ -39,7 +39,7 @@ header {
   padding: 20px 5%;
   text-align: center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: static;
   top: 0;
   z-index: 1000;
   transition: all 0.3s ease;
