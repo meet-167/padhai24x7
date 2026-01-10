@@ -394,11 +394,15 @@ main {
    ========================================= */
 #welcome-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 70%; height: 70%;
+  top: 0; 
+  left: 0;
+  /* CHANGED: Make it cover the full screen */
+  width: 100%; 
+  height: 100%;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
-  z-index: 1000;
+  /* CHANGED: Higher Z-Index than header (header is 1000) */
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -408,13 +412,33 @@ main {
 #welcome-modal {
   background: #fff;
   border-radius: 30px;
-  padding: 50px;
-  max-width: 650px;
+  padding: 40px; /* Reduced padding slightly */
+  max-width: 600px;
   width: 100%;
   position: relative;
   text-align: center;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* ADDED: Scroll handling for long content */
+  max-height: 90vh; /* Never taller than 90% of screen */
+  overflow-y: auto; /* Add scrollbar inside modal if text is too long */
+}
+
+/* Custom Scrollbar for the modal */
+#welcome-modal::-webkit-scrollbar {
+  width: 8px;
+}
+#welcome-modal::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 4px;
+}
+#welcome-modal::-webkit-scrollbar-thumb {
+  background: #c1c1c1; 
+  border-radius: 4px;
+}
+#welcome-modal::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8; 
 }
 
 @keyframes slideUp {
@@ -437,14 +461,14 @@ main {
 
 .welcome-features {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Better responsiveness */
   gap: 15px;
-  margin: 30px 0;
+  margin: 25px 0;
 }
 
 .welcome-feature-item {
   background: #f8f9fa;
-  padding: 20px;
+  padding: 15px; /* Reduced padding */
   border-radius: 16px;
   transition: transform 0.3s;
   border: 1px solid #eee;
@@ -460,6 +484,7 @@ main {
 .welcome-feature-item h4 {
   color: #2d3436;
   margin-bottom: 5px;
+  font-size: 0.95rem; /* Adjusted size */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -469,6 +494,10 @@ main {
 .welcome-feature-item p {
   font-size: 0.75rem;
   color: #636e72;
+}
+
+.welcome-cta {
+    margin-top: 20px;
 }
 
 #close-welcome-btn {
@@ -482,11 +511,13 @@ main {
   cursor: pointer;
   box-shadow: 0 10px 20px rgba(255, 128, 8, 0.3);
   transition: transform 0.2s;
+  margin-top: 15px;
 }
 
 #close-welcome-btn:hover {
   transform: translateY(-3px) scale(1);
 }
+
 
 /* =========================================
    8. INFO FOOTER
