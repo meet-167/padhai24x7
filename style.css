@@ -341,12 +341,33 @@ main {
 }
 
 /* Leaderboard List */
+
 #leaderboard-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-top: 20px;
+  max-height: 400px; 
+  overflow-y: auto;
+  padding-right: 10px;
 }
+
+/* this custom scrolblar for Leaderboard */
+#leaderboard-list::-webkit-scrollbar {
+  width: 8px;
+}
+#leaderboard-list::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05); 
+  border-radius: 4px;
+}
+#leaderboard-list::-webkit-scrollbar-thumb {
+  background: #ccc; 
+  border-radius: 4px;
+}
+#leaderboard-list::-webkit-scrollbar-thumb:hover {
+  background: #4776E6; 
+}
+
 
 .leaderboard-row {
   display: grid;
@@ -522,17 +543,51 @@ main {
 /* =========================================
    8. INFO FOOTER
    ========================================= */
+/* Update this part in SECTION 8 */
+
 .info-footer {
   background: #fff;
-  padding: 50px;
-  border-radius: 24px;
-  margin: 40px auto;
+  padding: 30px; /* Reduced from 50px */
+  border-radius: 20px;
   width: 100%;
   max-width: 1000px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  margin-top: 50px;
+  margin: 30px auto 0 auto; /* Tighter margins */
   text-align: center;
 }
+
+.info-header h2 {
+  font-size: 1.8rem; /* Slightly smaller for better fit */
+  color: #2d3436;
+  margin-bottom: 5px;
+}
+
+.info-header p {
+  color: #636e72;
+  margin-bottom: 25px; /* Reduced from 40px */
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px; /* Reduced gap */
+  margin-bottom: 25px;
+}
+
+.feature-card {
+  background: rgba(248, 249, 250, 0.5);
+  padding: 20px; /* Reduced padding inside cards */
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.feature-card .icon {
+  font-size: 2rem; /* Smaller icon */
+  margin-bottom: 10px;
+}
+
 
 .info-footer h3, .info-footer h4 {
   color: #2d3436;
@@ -579,26 +634,6 @@ main {
   margin-bottom: 10px;
 }
 
-.info-header p {
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 40px;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.feature-card {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 30px 20px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
 .feature-card.highlight {
   background: white;
   border: 2px solid #4776E6;
@@ -606,11 +641,6 @@ main {
 
 .feature-card:hover {
   transform: translateY(-10px);
-}
-
-.feature-card .icon {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
 }
 
 .feature-card h4 {
