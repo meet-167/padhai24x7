@@ -169,6 +169,21 @@ main {
 }
 
 /* Timer */
+#options-box {
+  display: flex; /* Changed from grid to flex for better stability */
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+#options-box button {
+  width: 100%;
+  min-height: 55px; /* Ensures buttons don't squash vertically */
+  display: block;   /* Ensures they take full width */
+  word-wrap: break-word; /* Prevents text from leaking out */
+  white-space: normal;   /* Allows long questions to wrap to next line */
+}
+
 #timer-container {
   display: flex;
   flex-direction: column;
@@ -217,26 +232,6 @@ main {
 }
 
 /* Options */
-#options-box {
-  display: grid;
-  gap: 15px;
-}
-
-#options-box button {
-  width: 100%;
-  padding: 18px 25px;
-  text-align: left;
-  background: #fff;
-  border: 2px solid #e1e1e1;
-  border-radius: 15px;
-  color: #555;
-  font-size: 1.05rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Poppins', sans-serif;
-  position: relative;
-}
 
 #options-box button:hover:not(:disabled) {
   border-color: #4776E6;
@@ -678,6 +673,13 @@ footer {
    10. MOBILE RESPONSIVENESS (UPDATED)
    ========================================= */
 @media (max-width: 768px) {
+  
+
+  
+}
+
+
+@media (max-width: 768px) {
   /* Global spacing reductions */
   main { 
     padding: 20px 10px; 
@@ -722,8 +724,9 @@ footer {
   }
 
   /* Quiz Area Adjustments */
-  #quiz-area { 
-    padding: 20px; 
+  #quiz-area {
+    padding: 15px; /* Tighter padding for more button space */
+    width: 95%;    /* Use more of the screen width */
   }
   
   #question-box {
@@ -731,9 +734,10 @@ footer {
     padding: 15px;
   }
 
-  #options-box button { 
-    padding: 12px 15px; 
-    font-size: 0.95rem; 
+  #options-box button {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
   }
   
   #subjects button { 
