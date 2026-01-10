@@ -166,6 +166,9 @@ main {
   max-width: 800px;
   border: 1px solid rgba(255,255,255,0.8);
   scroll-margin-top: 140px;
+  margin-top: 10px; /* Bring it closer to the top when header is static */
+  z-index: 10;
+  position: relative;
 }
 
 /* Timer */
