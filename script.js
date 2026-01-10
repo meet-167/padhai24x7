@@ -75,9 +75,9 @@ signInAnonymously(auth)
     currentUserId = userCredential.user.uid;
     console.log("Signed in with ID:", currentUserId);
     
-    await incrementVisitCounter("totalVisits");
     await setupPlayer();
     await loadLeaderboard();
+    await incrementVisitCounter("totalVisits");
   })
   .catch((err) => console.error("Auth error:", err));
 
