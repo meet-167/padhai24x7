@@ -185,6 +185,19 @@ main {
   display: block;   /* Ensures they take full width */
   word-wrap: break-word; /* Prevents text from leaking out */
   white-space: normal;   /* Allows long questions to wrap to next line */
+  width: 100%;
+  padding: 18px 25px;
+  text-align: left;
+  background: #fff;
+  border: 2px solid #e1e1e1;
+  border-radius: 15px;
+  color: #555;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
 }
 
 #timer-container {
