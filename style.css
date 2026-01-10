@@ -395,7 +395,7 @@ main {
 #welcome-overlay {
   position: fixed;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 70%; height: 70%;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   z-index: 1000;
@@ -423,14 +423,14 @@ main {
 }
 
 #welcome-modal h2 {
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   color: #2d3436;
   margin-bottom: 10px;
 }
 
 .welcome-subtitle {
   color: #4776E6;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 20px;
 }
@@ -467,7 +467,7 @@ main {
 }
 
 .welcome-feature-item p {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #636e72;
 }
 
@@ -477,7 +477,7 @@ main {
   border: none;
   padding: 16px 45px;
   border-radius: 50px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 10px 20px rgba(255, 128, 8, 0.3);
@@ -485,7 +485,7 @@ main {
 }
 
 #close-welcome-btn:hover {
-  transform: translateY(-3px) scale(1.05);
+  transform: translateY(-3px) scale(1);
 }
 
 /* =========================================
