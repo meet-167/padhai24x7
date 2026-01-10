@@ -675,14 +675,68 @@ footer {
 }
 
 /* =========================================
-   10. MOBILE RESPONSIVENESS
+   10. MOBILE RESPONSIVENESS (UPDATED)
    ========================================= */
 @media (max-width: 768px) {
-  header h1 { font-size: 1.8rem; }
-  .welcome-features { grid-template-columns: 1fr; }
-  #welcome-modal { padding: 30px 20px; }
-  #quiz-area { padding: 25px; }
-  #options-box button { padding: 15px 20px; font-size: 0.95rem; }
-  .leaderboard-row { grid-template-columns: 40px 1fr 70px; font-size: 0.9rem; }
-  #subjects button { padding: 20px; }
+  /* Global spacing reductions */
+  main { 
+    padding: 20px 10px; 
+    margin-top: 10px;
+  }
+  
+  header {
+    padding: 15px 5%;
+  }
+
+  header h1 { 
+    font-size: 1.8rem; 
+  }
+
+  /* Compact Leaderboard & Results */
+  #result-area, #leaderboard-section {
+    padding: 20px; /* Reduced from 40px */
+  }
+
+  .leaderboard-row { 
+    grid-template-columns: 40px 1fr 60px; /* Tighter columns */
+    font-size: 0.85rem; 
+    padding: 10px;
+  }
+
+  #leaderboard-list {
+    max-height: 300px; /* Shorter list on mobile */
+  }
+
+  /* Compact Info Footer on Mobile */
+  .info-footer {
+    padding: 20px 15px; /* Very tight padding */
+    margin-top: 20px;
+  }
+  
+  .info-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 15px;
+  }
+
+  /* Quiz Area Adjustments */
+  #quiz-area { 
+    padding: 20px; 
+  }
+  
+  #question-box {
+    font-size: 1.1rem;
+    padding: 15px;
+  }
+
+  #options-box button { 
+    padding: 12px 15px; 
+    font-size: 0.95rem; 
+  }
+  
+  #subjects button { 
+    padding: 20px; 
+  }
 }
