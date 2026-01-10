@@ -27,7 +27,7 @@ const leaderboardList = document.getElementById("leaderboard-list");
 const playerNameDisplay = document.getElementById("player-name-display");
 const playerEloDisplay = document.getElementById("player-elo-display");
 const infoFooter = document.getElementById("info-footer");
-const missionStatement = document.getElementById("mission-statement");
+
 let timerDisplay = null;
 let timerBar = null;
 
@@ -352,7 +352,7 @@ async function startGame(subject) {
   infoFooter.classList.add("hidden");
   quizArea.classList.remove("hidden");
   resultArea.classList.add("hidden");
-  missionStatement.classList.add("hidden");
+  
   score = 0;
   currentIndex = 0;
   answersSummary = [];
@@ -540,5 +540,4 @@ restartBtn.addEventListener("click", () => {
   subjectSelection.classList.remove("hidden");
   leaderboardSection.classList.remove("hidden");
   infoFooter.classList.remove("hidden");
-  missionStatement.classList.remove("hidden");
 });
